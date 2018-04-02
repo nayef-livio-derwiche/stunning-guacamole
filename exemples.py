@@ -21,7 +21,7 @@ n_s_val = get_n_batches(X_train, batch_size, w_1)
 
 
 gen_train_1 = data_generator(X_train, shape='flat', label='class1', window=w_1)
-gen_val_1 = data_generator(X_train, shape='flat', label='class1', window=w_1)
+gen_val_1 = data_generator(X_val, shape='flat', label='class1', window=w_1)
 model1 = LogisticRegressionModel((n_stocks * w_1,), (n_stocks,))
 model1.train(gen_train_1, 2, steps_per_epoch=n_s_train,
              validation_data=gen_val_1, val_steps=n_s_val,
@@ -31,14 +31,14 @@ model1.train(gen_train_1, 2, steps_per_epoch=n_s_train,
 
 w_2 = 6
 n_s_train = get_n_batches(X_train, batch_size, w_1)
-n_s_val = get_n_batches(X_train, batch_size, w_1)
+n_s_val = get_n_batches(X_val, batch_size, w_1)
 
 
 gen_train_2 = data_generator(X_train, shape='flat', label='class1', window=w_1)
-gen_val_2 = data_generator(X_train, shape='flat', label='class1', window=w_1)
+gen_val_2 = data_generator(X_val, shape='flat', label='class1', window=w_1)
 model1 = NeuralNetwork((n_stocks * w_1,), (n_stocks,), "classification", [32])
 model1.train(gen_train_2, 2, steps_per_epoch=n_s_train,
-             validation_data=gen_val_1, val_steps=n_s_val,
+             validation_data=gen_val_2, val_steps=n_s_val,
              lr=0.001, regularization=1., restart=True)
 
 #Model 3
@@ -49,7 +49,7 @@ n_s_val = get_n_batches(X_train, batch_size, w_1)
 
 
 gen_train_1 = data_generator(X_train, shape='tensor', label='class1', window=w_1)
-gen_val_1 = data_generator(X_train, shape='tensor', label='class1', window=w_1)
+gen_val_1 = data_generator(X_val, shape='tensor', label='class1', window=w_1)
 model1 = ConvNet((w_1, n_stocks), (n_stocks,), "classification", 32, 3, 1)
 model1.train(gen_train_1, 2, steps_per_epoch=n_s_train,
              validation_data=gen_val_1, val_steps=n_s_val,
@@ -59,11 +59,11 @@ model1.train(gen_train_1, 2, steps_per_epoch=n_s_train,
 
 w_1 = 6
 n_s_train = get_n_batches(X_train, batch_size, w_1)
-n_s_val = get_n_batches(X_train, batch_size, w_1)
+n_s_val = get_n_batches(X_val, batch_size, w_1)
 
 
-gen_train_1 = data_generator(X_train[:n_s_train*batch_size], shape='tensor', label='class1', window=w_1)
-gen_val_1 = data_generator(X_train[:n_s_train*batch_size], shape='tensor', label='class1', window=w_1)
+gen_train_1 = data_generator(X_train[:(n_s_train-1)*batch_size + w_1], shape='tensor', label='class1', window=w_1)
+gen_val_1 = data_generator(X_val[:(n_s_val-1)*batch_size + w_1], shape='tensor', label='class1', window=w_1)
 model1 = LSTMModel(batch_size, w_1, n_stocks, 32, (n_stocks,), model_type="classification", n_stacks=1)
 model1.train(gen_train_1, 2, steps_per_epoch=n_s_train,
              validation_data=gen_val_1, val_steps=n_s_val,
